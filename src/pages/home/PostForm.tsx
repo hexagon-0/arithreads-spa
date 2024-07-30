@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useErrorList } from "../../components/ErrorList";
 
 export interface PostFormProps {
@@ -10,8 +10,13 @@ export default function PostForm ({ toggleText, onPublish }: PostFormProps) {
     const [postFormVisible, setPostFormVisible] = useState(false);
     const [newPostContents, setNewPostContents] = useState('');
 
+    const inputRef = useRef<HTMLInputElement>(null);
     const [inFlight, setInFlight] = useState(false);
     const { setErrors, ErrorList } = useErrorList();
+
+    useEffect(function () {
+        inputRef.current?.focus();
+    }, [postFormVisible]);
 
     function handlePublishClick (e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -39,7 +44,7 @@ export default function PostForm ({ toggleText, onPublish }: PostFormProps) {
             <button
                 className="underline text-blue-400 block m-auto"
                 type="button"
-                onClick={() => setPostFormVisible(value => !value)}
+                onClick={() =>  setPostFormVisible(value => !value)}
             >
                 {postFormVisible ? 'Cancel' : toggleText}
             </button>
@@ -49,15 +54,17 @@ export default function PostForm ({ toggleText, onPublish }: PostFormProps) {
                     className="space-y-1 bg-zinc-600 rounded-md p-2 w-fit m-auto"
                     onSubmit={handlePublishClick}
                 >
-                    <textarea
+                    <input
+                        type="text"
                         className="block bg-zinc-800 rounded-md resize px-2 py-1"
+                        ref={inputRef}
                         value={newPostContents}
                         onChange={e => {
                             setErrors([]);
                             setNewPostContents(e.target.value);
                         }}
                         disabled={inFlight}
-                    ></textarea>
+                    />
                     <button
                         className="bg-emerald-400 text-zinc-900 rounded-md py-1 px-2"
                         type="submit"

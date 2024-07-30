@@ -15,12 +15,13 @@ export interface PostProps {
     post: Post
     offset?: number
     previousResult?: number,
-    onReply?: () => Promise<void>
+    onReply: () => Promise<void>
 }
 
 export default function PostView ({ post, offset = 0, previousResult, onReply }: PostProps) {
     const { auth } = useAuth();
 
+    post = { ...post, operand: Number(post.operand) };
     const offsetFactor = 1;
     const left = offset * offsetFactor;
 
@@ -114,7 +115,13 @@ export default function PostView ({ post, offset = 0, previousResult, onReply }:
                 }
             </div>
             {post.responses.map(r =>
-                <PostView key={r.id} post={r} offset={offset + 1} previousResult={result} />
+                <PostView
+                    key={r.id}
+                    post={r}
+                    offset={offset + 1}
+                    previousResult={result}
+                    onReply={onReply}
+                />
             )}
         </>
     );
