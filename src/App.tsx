@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login";
 import HomePage from "./pages/home";
+import { AuthContextProvider } from "./AuthContext";
 
 const router = createBrowserRouter([
   {
-    path: '/home',
+    path: '/',
     element: <HomePage />,
   },
   {
@@ -15,7 +16,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   )
 }
 
