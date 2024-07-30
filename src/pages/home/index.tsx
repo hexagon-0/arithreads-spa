@@ -49,7 +49,7 @@ export default function HomePage () {
                                         to={'/login'}
                                         className="underline text-blue-400"
                                     >
-                                        Login
+                                        Log in
                                     </Link>
                                 </li>
                                 <span className="border-l border-zinc-100"></span>
@@ -70,7 +70,7 @@ export default function HomePage () {
                                     className="underline text-blue-400"
                                     onClick={() => setAuth({ status: 'unauthenticated' })}
                                 >
-                                    (Logout)
+                                    (Log out)
                                 </button>
                             </li>
                         }

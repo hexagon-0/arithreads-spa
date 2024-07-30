@@ -4,13 +4,14 @@ import axios, { AxiosError } from "axios";
 import { useAuth } from "../../AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function LoginPage () {
+export default function RegisterPage () {
     const { setAuth } = useAuth();
     const navigate = useNavigate();
     const [errors, setErrors] = useState<string[] | null>(null);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [inFlight, setInFlight] = useState(false);
 
     function handleUsernameChange (e: ChangeEvent<HTMLInputElement>) {
@@ -21,11 +22,21 @@ export default function LoginPage () {
         setPassword(e.target.value);
     }
 
+    function handleConfirmPasswordChange (e: ChangeEvent<HTMLInputElement>) {
+        setConfirmPassword(e.target.value);
+    }
+
     async function handleFormSubmit (e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setErrors(['Passwords must match']);
+            return;
+        }
+
         setInFlight(true);
 
-        async function makeRequest () {
+        async function makeLoginRequest () {
             const url = `${API_URL}/users/login`;
 
             try {
@@ -36,15 +47,28 @@ export default function LoginPage () {
             } catch (err) {
                 console.error(err);
 
+                setErrors(['Automatic login failed, please log in manually']);
+            }
+        }
+
+        async function makeRegistrationRequest () {
+            const url = `${API_URL}/users/`;
+
+            try {
+                await axios.post(url, { username, password });
+                await makeLoginRequest();
+            } catch (err) {
+                console.error(err);
+
                 if (err instanceof AxiosError && Array.isArray(err.response?.data)) {
-                    setErrors(err.response.data);
+                    setErrors(err.response.data)
                 }
             } finally {
                 setInFlight(false);
             }
         }
 
-        makeRequest();
+        makeRegistrationRequest();
     };
 
     return (
@@ -76,11 +100,23 @@ export default function LoginPage () {
                         />
                     </div>
 
+                    <div className="flex justify-between flex-col md:flex-row">
+                        <label htmlFor="confirmPassword">Confirm password:</label>
+                        <input
+                            id="confirmPassword"
+                            className="rounded-md px-2 bg-zinc-800"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={handleConfirmPasswordChange}
+                            disabled={inFlight}
+                        />
+                    </div>
+
                     <button
                         className="w-full bg-emerald-400 text-zinc-900 rounded-md py-2"
                         disabled={inFlight}
                     >
-                        {inFlight ? 'Logging in...' : 'Login'}
+                        {inFlight ? 'Registering...' : 'Register'}
                     </button>
                 </form>
 
@@ -89,8 +125,8 @@ export default function LoginPage () {
                         Back
                     </Link>
 
-                    <Link to={'/register'} className="rounded-md px-2 py-1 bg-gray-400 text-zinc-900">
-                        Register
+                    <Link to={'/login'} className="rounded-md px-2 py-1 bg-gray-400 text-zinc-900">
+                        Log in
                     </Link>
                 </div>
 

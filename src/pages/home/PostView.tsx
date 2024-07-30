@@ -18,7 +18,7 @@ export interface PostProps {
 export default function PostView ({ post, offset = 0, previousResult }: PostProps) {
     const { auth } = useAuth();
 
-    const [answerVisible, setAnswerVisible] = useState(false);
+    const [replyFormVisible, setReplyFormVisible] = useState(false);
 
     const offsetFactor = 1;
     const left = offset * offsetFactor;
@@ -70,12 +70,12 @@ export default function PostView ({ post, offset = 0, previousResult }: PostProp
                         <button
                             className="underline text-blue-400"
                             type="button"
-                            onClick={() => setAnswerVisible(value => !value)}
+                            onClick={() => setReplyFormVisible(value => !value)}
                         >
-                            {answerVisible ? 'Cancel' : 'Answer'}
+                            {replyFormVisible ? 'Cancel' : 'Reply'}
                         </button>
 
-                        {answerVisible &&
+                        {replyFormVisible &&
                             <div className="space-y-1">
                                 <textarea
                                     className="block bg-zinc-800 rounded-md resize px-2 py-1"
@@ -83,7 +83,7 @@ export default function PostView ({ post, offset = 0, previousResult }: PostProp
                                 <button
                                     className="bg-emerald-400 text-zinc-900 rounded-md py-1 px-2"
                                     type="button"
-                                    onClick={() => setAnswerVisible(value => !value)}
+                                    onClick={() => setReplyFormVisible(value => !value)}
                                 >
                                     Publish
                                 </button>
