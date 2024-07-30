@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useAuth } from "../../AuthContext"
 import PostForm from "./PostForm"
 import axios from "axios"

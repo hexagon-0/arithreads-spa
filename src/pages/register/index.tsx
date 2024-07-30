@@ -3,11 +3,12 @@ import { API_URL } from "../../config";
 import axios, { AxiosError } from "axios";
 import { useAuth } from "../../AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { useErrorList } from "../../components/ErrorList";
 
 export default function RegisterPage () {
     const { setAuth } = useAuth();
     const navigate = useNavigate();
-    const [errors, setErrors] = useState<string[] | null>(null);
+    const { setErrors, ErrorList } = useErrorList();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -130,20 +131,7 @@ export default function RegisterPage () {
                     </Link>
                 </div>
 
-                {errors && errors.length > 0 &&
-                    <div className="bg-red-600 p-2 rounded-md relative">
-                        <button
-                            type="button"
-                            className="absolute top-0 right-0 px-2"
-                            onClick={() => setErrors(null)}
-                        >
-                            &times;
-                        </button>
-                        {errors.map((message, i) =>
-                            <p key={i}>{message}</p>
-                        )}
-                    </div>
-                }
+                <ErrorList />
             </div>
         </div>
     );
