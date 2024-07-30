@@ -4,35 +4,61 @@ import { API_URL } from "../../config";
 import { useAuth } from "../../AuthContext";
 import { Link } from "react-router-dom";
 import PostView, { Post } from "./PostView";
+import PostForm from "./PostForm";
 
 export default function HomePage () {
     const { auth, setAuth } = useAuth();
 
-    const [postFormVisible, setPostFormVisible] = useState(false);
     const [posts, setPosts] = useState<Post[]>([]);
+
+    async function loadPosts (signal?: AbortSignal) {
+        try {
+            const response = await axios.get(
+                `${API_URL}/posts/`,
+                { signal },
+            );
+
+            setPosts(response.data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     useEffect(() => {
         const controller = new AbortController();
 
-        async function makeRequest () {
-            try {
-                const response = await axios.get(
-                    `${API_URL}/posts/`,
-                    { signal: controller.signal },
-                );
-
-                setPosts(response.data);
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        makeRequest();
+        loadPosts(controller.signal);
 
         return () => {
             controller.abort();
         };
     }, []);
+
+    function validateStartingPostContents (contents: string) {
+        const operand = Number.parseFloat(contents);
+
+        if (Number.isNaN(operand)) {
+            throw new Error('Operand must be a valid number');
+        }
+
+        return operand;
+    }
+
+    const handleStartingPostPublish = (accessToken: string) => async function (contents: string) {
+        const operand = validateStartingPostContents(contents);
+
+        await axios.post(
+            `${API_URL}/posts/`,
+            { operand },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        await loadPosts();
+    }
 
     return (
         <div className="w-full h-screen bg-zinc-800 text-zinc-100 overflow-auto">
@@ -80,34 +106,11 @@ export default function HomePage () {
 
             <main className="space-y-4 px-2 max-w-screen-lg mx-auto">
                 {auth.status === 'authenticated' &&
-                    <>
-                        <button
-                            className="underline text-blue-400 block m-auto"
-                            type="button"
-                            onClick={() => setPostFormVisible(value => !value)}
-                        >
-                            {postFormVisible ? 'Cancel' : 'New post'}
-                        </button>
-
-                        {postFormVisible &&
-                            <div className="space-y-1 bg-zinc-600 rounded-md p-2 w-fit m-auto">
-                                <textarea
-                                    className="block bg-zinc-800 rounded-md resize px-2 py-1"
-                                ></textarea>
-                                <button
-                                    className="bg-emerald-400 text-zinc-900 rounded-md py-1 px-2"
-                                    type="button"
-                                    onClick={() => setPostFormVisible(value => !value)}
-                                >
-                                    Publish
-                                </button>
-                            </div>
-                        }
-                    </>
+                    <PostForm toggleText="New post" onPublish={handleStartingPostPublish(auth.token)} />
                 }
 
                 {posts.map(post =>
-                    <PostView key={post.id} post={post} />
+                    <PostView key={post.id} post={post} onReply={() => loadPosts()} />
                 )}
             </main>
 
