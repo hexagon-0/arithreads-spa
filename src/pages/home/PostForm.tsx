@@ -3,10 +3,11 @@ import { useErrorList } from "../../components/ErrorList";
 
 export interface PostFormProps {
     toggleText: string
+    placeholder?: string
     onPublish: (contents: string) => Promise<void>
 }
 
-export default function PostForm ({ toggleText, onPublish }: PostFormProps) {
+export default function PostForm ({ toggleText, placeholder = '', onPublish }: PostFormProps) {
     const [postFormVisible, setPostFormVisible] = useState(false);
     const [newPostContents, setNewPostContents] = useState('');
 
@@ -57,6 +58,7 @@ export default function PostForm ({ toggleText, onPublish }: PostFormProps) {
                     <input
                         type="text"
                         className="block bg-zinc-800 rounded-md resize px-2 py-1"
+                        placeholder={placeholder}
                         ref={inputRef}
                         value={newPostContents}
                         onChange={e => {

@@ -106,7 +106,11 @@ export default function HomePage () {
 
             <main className="space-y-4 px-2 max-w-screen-lg mx-auto">
                 {auth.status === 'authenticated' &&
-                    <PostForm toggleText="New post" onPublish={handleStartingPostPublish(auth.token)} />
+                    <PostForm
+                        toggleText="New post"
+                        placeholder="Enter a number"
+                        onPublish={handleStartingPostPublish(auth.token)}
+                    />
                 }
 
                 {posts.map(post =>

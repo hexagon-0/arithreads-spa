@@ -111,7 +111,11 @@ export default function PostView ({ post, offset = 0, previousResult, onReply }:
                 <p className="text-xs text-zinc-300">{summary}</p>
                 <p className="text-xl py-2">{result}</p>
                 {auth.status === 'authenticated' &&
-                    <PostForm toggleText="Reply" onPublish={handleReplyPublish(auth.token)} />
+                    <PostForm
+                        toggleText="Reply"
+                        placeholder="Try: + 5"
+                        onPublish={handleReplyPublish(auth.token)}
+                    />
                 }
             </div>
             {post.responses.map(r =>
