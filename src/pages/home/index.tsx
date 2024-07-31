@@ -72,7 +72,7 @@ export default function HomePage () {
                             <>
                                 <li className="inline">
                                     <Link
-                                        to={'/login'}
+                                        to={import.meta.env.BASE_URL + 'login'}
                                         className="underline text-blue-400"
                                     >
                                         Log in
@@ -81,7 +81,7 @@ export default function HomePage () {
                                 <span className="border-l border-zinc-100"></span>
                                 <li className="inline">
                                     <Link
-                                        to={'/register'}
+                                        to={import.meta.env.BASE_URL + 'register'}
                                         className="underline text-blue-400"
                                     >
                                         Register

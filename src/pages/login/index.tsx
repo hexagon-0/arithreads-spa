@@ -86,11 +86,11 @@ export default function LoginPage () {
                 </form>
 
                 <div className="flex justify-between">
-                    <Link to={'/'} className="rounded-md px-2 py-1 bg-gray-400 text-zinc-900">
+                    <Link to={import.meta.env.BASE_URL} className="rounded-md px-2 py-1 bg-gray-400 text-zinc-900">
                         Back
                     </Link>
 
-                    <Link to={'/register'} className="rounded-md px-2 py-1 bg-gray-400 text-zinc-900">
+                    <Link to={import.meta.env.BASE_URL + 'register'} className="rounded-md px-2 py-1 bg-gray-400 text-zinc-900">
                         Register
                     </Link>
                 </div>

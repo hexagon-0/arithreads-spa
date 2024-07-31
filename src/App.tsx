@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login";
 import HomePage from "./pages/home";
 import { AuthContextProvider } from "./AuthContext";
@@ -6,20 +6,26 @@ import RegisterPage from "./pages/register";
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/register',
-    element: <RegisterPage />,
-  },
+    path: import.meta.env.BASE_URL,
+    element: <Outlet />,
+    children: [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/register',
+        element: <RegisterPage />,
+      },
+    ],
+  }
 ]);
 
-function App() {
+function App () {
   return (
     <AuthContextProvider>
       <RouterProvider router={router} />
