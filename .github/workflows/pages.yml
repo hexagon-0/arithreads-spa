@@ -24,9 +24,10 @@ jobs:
   # Single deploy job since we're just deploying
   deploy:
     environment:
-      name: pages-production
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     env:
+      VITE_API_URL: ${{ vars.API_URL }}
       BASE_URL: /${{ github.event.repository.name }}
     runs-on: ubuntu-latest
     steps:
