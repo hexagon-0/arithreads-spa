@@ -33,7 +33,7 @@ export default function LoginPage () {
                 const response = await axios.post(url, { username, password });
                 const token: string = response.data.accessToken;
                 setAuth({ status: 'authenticated', username, token });
-                navigate('/');
+                navigate(import.meta.env.BASE_URL);
             } catch (err) {
                 console.error(err);
 
